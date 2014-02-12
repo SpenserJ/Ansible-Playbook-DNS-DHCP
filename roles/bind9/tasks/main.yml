@@ -1,0 +1,12 @@
+---
+- name: Install Bind9 Server
+  apt: pkg=bind9 state=latest update_cache=yes
+- name: Configure Bind Options
+  template: src=named.conf.options.j2 dest=/etc/bind/named.conf.options group=bind
+  notify: Restart Bind
+- name: Configure Bind Local
+  template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
+  notify: Restart Bind
+- name: Configure internal.simplesimple.ca
+  template: src=internal.simplesimple.ca.hosts.j2 dest=/var/lib/bind/internal.simplesimple.ca.hosts group=bind mode=660
+  notify: Restart Bind

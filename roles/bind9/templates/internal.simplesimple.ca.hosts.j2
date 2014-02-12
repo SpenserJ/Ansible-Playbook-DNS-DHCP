@@ -1,0 +1,38 @@
+; This line indicates that the object we're configuring below (in this case,
+; internal.simplesimple.ca) has its origin at the "." domain.  "." is the root domain
+; from which all the TLDs branch.
+$ORIGIN .
+
+; Next line defines the DNS time-to-live setting
+$TTL 3600; 1 hour - Testing only
+
+; The next set of lines are the "Start of Authority" record and define important
+; info about the domain. In my case, we're defining internal.simplesimple.ca and saying
+; that skynet.internal.simplesimple.ca is its source host, and spenser@simplesimple.ca
+; is the domain maintainer. For the e-mail address, we use a dot instead of an @.
+; The lines after that define the zone serial number, which is used to keep track
+; of when the zone file was modified, and then some interval definitions which
+; you can leave as default.
+internal.simplesimple.ca       IN SOA  skynet.internal.simplesimple.ca. spenser.simplesimple.ca. (
+              1263527838 ; serial
+              10800      ; refresh (3 hours)
+              3600       ; retry (1 hour)
+              604800     ; expire (1 week)
+              38400      ; minimum (10 hours 40 minutes)
+              )
+
+; Next, we define the hosts necessary to make the domain function. First, we add
+; an "NS Record" to define the domain's name server...
+          NS  skynet.internal.simplesimple.ca.
+
+; ...then an "A Record" for the domain server's IP address...
+          A   10.0.0.5
+
+; Now we're ready to begin adding hosts, but first we need another origin
+; statement to indicate that the hosts added below originate not from ".", like
+; the domain itself; rather, they originate from "internal.simplesimple.ca".
+;
+$ORIGIN internal.simplesimple.ca.
+
+; A Records for non-DHCP hosts in the domain
+skynet	A	10.0.0.5

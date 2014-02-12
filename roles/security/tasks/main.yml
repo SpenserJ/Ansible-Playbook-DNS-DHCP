@@ -1,0 +1,13 @@
+---
+- name: Generate a key for updating Bind from DHCP
+  command: /usr/sbin/rndc-confgen -a -r /dev/urandom -k dhcpupdate -c /etc/bind/dhcpupdate.key
+  notify: Restart Bind
+- name: Copy the key from Bind to DHCP
+  command: cp /etc/bind/dhcpupdate.key /etc/dhcp/
+  notify: Restart DHCP
+- name: Set group for Bind key
+  file: path=/etc/bind/dhcpupdate.key group=bind mode=640
+  notify: Restart Bind
+- name: Set mode for DHCP key
+  file: path=/etc/dhcp/dhcpupdate.key mode=644
+  notify: Restart DHCP

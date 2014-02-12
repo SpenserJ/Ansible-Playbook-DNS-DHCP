@@ -1,0 +1,7 @@
+include "/etc/bind/dhcpupdate.key";
+
+zone "internal.simplesimple.ca" {
+  type master;
+  file "/var/lib/bind/internal.simplesimple.ca.hosts";
+  allow-update { key dhcpupdate; };
+};
