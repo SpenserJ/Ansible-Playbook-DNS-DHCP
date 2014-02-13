@@ -3,8 +3,8 @@ max-lease-time 7200;
 option subnet-mask 255.255.255.0;
 option broadcast-address 10.0.0.255;
 option routers 10.0.0.1;
-option domain-name-servers 8.8.8.8, 8.8.4.4;
-option domain-name "local.simplesimple.ca";
+option domain-name-servers 10.0.0.5, 8.8.8.8, 8.8.4.4;
+option domain-name "internal.simplesimple.ca";
 
 # Dynamic DNS
 include               "/etc/dhcp/dhcpupdate.key";
@@ -13,7 +13,7 @@ ddns-update-style     interim;
 ignore                client-updates;
 update-static-leases  on;
 
-zone local.simplesimple.ca. {
+zone internal.simplesimple.ca. {
   primary 127.0.0.1;
   key dhcpupdate;
 }
