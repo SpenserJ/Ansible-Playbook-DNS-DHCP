@@ -10,3 +10,6 @@
 - name: Configure internal.simplesimple.ca
   template: src=internal.simplesimple.ca.hosts.j2 dest=/var/lib/bind/internal.simplesimple.ca.hosts group=bind mode=660
   notify: Restart Bind
+- name: Configure RDNS for 10.0.0.x
+  template: src=0.0.10.rev.j2 dest=/var/lib/bind/0.0.10.rev group=bind mode=660
+  notify: Restart Bind

@@ -5,3 +5,9 @@ zone "internal.simplesimple.ca" {
   file "/var/lib/bind/internal.simplesimple.ca.hosts";
   allow-update { key dhcpupdate; };
 };
+
+zone "0.0.10.in-addr.arpa" {
+  type master;
+  file "/var/lib/bind/0.0.10.rev";
+  allow-update { key dhcpupdate; };
+};
