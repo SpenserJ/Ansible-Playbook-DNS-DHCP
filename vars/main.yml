@@ -1,0 +1,8 @@
+---
+developers:
+  - developers: 
+    - { name: 'spenser', ip: '10.0.0.26', mac: '08:00:27:fb:f3:3c' }
+    - { name: 'ben', ip: '10.0.0.27', mac: '08:00:27:f2:22:3b' }
+    - { name: 'chad', ip: '10.0.0.28', mac: '08:00:27:8a:cc:02' }
+    - { name: 'mike', ip: '10.0.0.29', mac: '08:00:27:97:a6:99' }
+    - { name: 'johan', ip: '10.0.0.30', mac: '08:00:27:59:56:d4' }
