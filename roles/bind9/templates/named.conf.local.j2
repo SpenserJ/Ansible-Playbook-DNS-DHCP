@@ -6,6 +6,19 @@ zone "internal.simplesimple.ca" {
   allow-update { key dhcpupdate; };
 };
 
+zone "dev" {
+  type master;
+  file "/var/lib/bind/dev.tld.zone";
+};
+
+{% for name in item %}
+zone "{{ name }}.dev" {
+  type master;
+  file "/var/lib/bind/dev-{{ name }}.hosts";
+  allow-update { key dhcpupdate; };
+};
+
+{% endfor %}
 zone "0.0.10.in-addr.arpa" {
   type master;
   file "/var/lib/bind/0.0.10.rev";
