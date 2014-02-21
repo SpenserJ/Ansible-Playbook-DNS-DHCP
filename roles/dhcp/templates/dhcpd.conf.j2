@@ -3,7 +3,7 @@ max-lease-time 172800;
 option subnet-mask 255.255.255.0;
 option broadcast-address 10.0.0.255;
 option routers 10.0.0.1;
-option domain-name-servers 10.0.0.5, 8.8.8.8, 8.8.4.4;
+option domain-name-servers 10.0.0.5; #, 8.8.8.8, 8.8.4.4;
 option domain-name "internal.simplesimple.ca";
 
 # Dynamic DNS
@@ -12,6 +12,7 @@ ddns-updates          on;
 ddns-update-style     interim;
 ignore                client-updates;
 update-static-leases  on;
+update-conflict-detection false;
 
 zone internal.simplesimple.ca. {
   primary 127.0.0.1;
@@ -23,7 +24,15 @@ zone 0.0.10.in-addr.arpa. {
   key dhcpupdate;
 }
 
+{% for dev in item.developers %}
+zone {{ dev.name }}.dev. {
+  primary 127.0.0.1;
+  key dhcpupdate;
+}
+
+{% endfor %}
 # Network Servers - .0-.15
+# Printers - .16-.24
 # Dev Boxes - .25-.49
 # Desktops - .200-.254
 
@@ -65,6 +74,22 @@ host pc-spenser {
 
 
 #
+# Printers
+#
+
+host print-hl5370dw {
+  hardware ethernet 00:1b:a9:86:27:21;
+  fixed-address 10.0.0.16;
+}
+
+host print-quartzenergy {
+  hardware ethernet 00:22:58:93:e6:65;
+  fixed-address 10.0.0.17;
+}
+
+
+
+#
 # Dev Boxes
 #
 
@@ -72,28 +97,11 @@ host staging {
   hardware ethernet 08:00:27:09:e6:1a;
   fixed-address 10.0.0.25;
 }
+{% for dev in item.developers %}
 
-host dev-spenser {
-  hardware ethernet 08:00:27:fb:f3:3c;
-  fixed-address 10.0.0.26;
+host {{ dev.name }}.dev {
+  option domain-name "";
+  hardware ethernet {{ dev.mac }};
+  fixed-address {{ dev.ip }};
 }
-
-host dev-ben {
-  hardware ethernet 08:00:27:f2:22:3b;
-  fixed-address 10.0.0.27;
-}
-
-host dev-chad {
-  hardware ethernet 08:00:27:8a:cc:02;
-  fixed-address 10.0.0.28;
-}
-
-host dev-mike {
-  hardware ethernet 08:00:27:97:a6:99;
-  fixed-address 10.0.0.29;
-}
-
-host dev-johan {
-  hardware ethernet 08:00:27:59:56:d4;
-  fixed-address 10.0.0.30;
-}
+{% endfor %}
