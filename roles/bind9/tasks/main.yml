@@ -4,9 +4,10 @@
 - name: Configure Bind Options
   template: src=named.conf.options.j2 dest=/etc/bind/named.conf.options group=bind
   notify: Restart Bind
-#- name: Configure Bind Local
-#  template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
-#  notify: Restart Bind
+- name: Configure Bind Local
+  template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
+  with_items: developers
+  notify: Restart Bind
 - name: Configure internal.simplesimple.ca
   template: src=internal.simplesimple.ca.hosts.j2 dest=/var/lib/bind/internal.simplesimple.ca.hosts group=bind mode=660
   notify: Restart Bind
@@ -18,7 +19,7 @@
   template: src=dev.tld.zone.j2 dest=/var/lib/bind/dev.tld.zone group=bind mode=660
   notify: Restart Bind
 - name: Configure Devbox Zones
-  template: src=devzone.hosts.j2 dest=/var/lib/bind/dev-{{ item.1.name }}.hosts group=bind mode=660
+  template: src=devzone.hosts.j2 dest=/var/lib/bind/{{ item.1.name }}.dev.hosts group=bind mode=660
   with_subelements:
   - developers
   - developers

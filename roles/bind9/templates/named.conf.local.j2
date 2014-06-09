@@ -11,10 +11,10 @@ zone "dev" {
   file "/var/lib/bind/dev.tld.zone";
 };
 
-{% for name in item %}
-zone "{{ name }}.dev" {
+{% for dev in item.developers %}
+zone "{{ dev.name }}.dev" {
   type master;
-  file "/var/lib/bind/dev-{{ name }}.hosts";
+  file "/var/lib/bind/{{ dev.name }}.dev.hosts";
   allow-update { key dhcpupdate; };
 };
 
