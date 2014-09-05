@@ -1,5 +1,12 @@
 include "/etc/bind/dhcpupdate.key";
 
+zone "staging.simplesimple.ca" {
+  type master;
+  file "/var/lib/bind/staging.simplesimple.ca.hosts";
+  allow-update { key dhcpupdate; };
+  notify yes;
+};
+
 zone "internal.simplesimple.ca" {
   type master;
   file "/var/lib/bind/internal.simplesimple.ca.hosts";

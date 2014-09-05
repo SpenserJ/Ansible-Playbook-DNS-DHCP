@@ -8,6 +8,9 @@
   template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
   with_items: developers
   notify: Restart Bind
+- name: Configure staging.simplesimple.ca
+  template: src=staging.simplesimple.ca.hosts.j2 dest=/var/lib/bind/staging.simplesimple.ca.hosts group=bind mode=660
+  notify: Restart Bind
 - name: Configure internal.simplesimple.ca
   template: src=internal.simplesimple.ca.hosts.j2 dest=/var/lib/bind/internal.simplesimple.ca.hosts group=bind mode=660
   notify: Restart Bind
