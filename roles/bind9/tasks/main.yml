@@ -1,6 +1,6 @@
 ---
 - name: Install Bind9 Server
-  apt: pkg=bind9 state=latest update_cache=yes
+  apt: pkg=bind9
 - name: Configure Bind Options
   template: src=named.conf.options.j2 dest=/etc/bind/named.conf.options group=bind
   notify: Restart Bind
