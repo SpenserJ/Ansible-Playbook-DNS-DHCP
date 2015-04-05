@@ -1,2 +1,3 @@
 .vagrant
 hosts
+vars/main.yml

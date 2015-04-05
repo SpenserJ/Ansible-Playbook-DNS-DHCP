@@ -1,34 +1,22 @@
 include "/etc/bind/dhcpupdate.key";
 
-zone "staging.simplesimple.ca" {
+{% for domain, subnet in subnets.iteritems() %}
+zone "{{ domain }}" {
   type master;
-  file "/var/lib/bind/staging.simplesimple.ca.hosts";
+  file "/var/lib/bind/{{ domain }}.hosts";
   allow-update { key dhcpupdate; };
   notify yes;
 };
 
-zone "internal.simplesimple.ca" {
+zone "{{ subnet.reverse }}.in-addr.arpa" {
   type master;
-  file "/var/lib/bind/internal.simplesimple.ca.hosts";
-  allow-update { key dhcpupdate; };
-  notify yes;
-};
-
-zone "dev" {
-  type master;
-  file "/var/lib/bind/dev.tld.zone";
-};
-
-{% for dev in item.developers %}
-zone "{{ dev.name }}.dev" {
-  type master;
-  file "/var/lib/bind/{{ dev.name }}.dev.hosts";
+  file "/var/lib/bind/{{ subnet.reverse }}.rev";
   allow-update { key dhcpupdate; };
 };
 
 {% endfor %}
-zone "0.0.10.in-addr.arpa" {
+
+zone "dev" {
   type master;
-  file "/var/lib/bind/0.0.10.rev";
-  allow-update { key dhcpupdate; };
+  file "/var/lib/bind/dev.tld.zone";
 };

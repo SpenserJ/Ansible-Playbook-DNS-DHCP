@@ -1,0 +1,18 @@
+---
+domain_name: 'internal.example.com'
+soa: 'admin@example.com'
+subnets:
+  internal.example.com:
+    subnet: '192.168.0'
+    reverse: '0.168.192'
+    start: 150
+    end: 199
+    # Static IPs
+    systems:
+      host1:
+        ip_octet: 25
+        mac: '00:00:00:00:00:00'
+      staging:
+        domain: 'staging.example.com'
+        ip_octet: 26
+        mac: '00:00:00:00:00:00'

@@ -17,8 +17,9 @@ options {
 
   // Restrict queries to the following subnets
   allow-query {
-    10.0.0/24;
-    192.168.122/24;
+{% for domain, subnet in subnets.iteritems() %}
+    {{ subnet.subnet }}/24;
+{% endfor %}
     127.0.0.1;
   };
 

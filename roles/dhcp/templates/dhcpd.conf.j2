@@ -1,10 +1,5 @@
 default-lease-time 86400;
 max-lease-time 172800;
-option subnet-mask 255.255.255.0;
-option broadcast-address 10.0.0.255;
-option routers 10.0.0.1;
-option domain-name-servers 10.0.0.5; #, 8.8.8.8, 8.8.4.4;
-option domain-name "internal.simplesimple.ca";
 
 # Dynamic DNS
 include               "/etc/dhcp/dhcpupdate.key";
@@ -14,116 +9,26 @@ ignore                client-updates;
 update-static-leases  on;
 update-conflict-detection false;
 
-zone staging.simplesimple.ca. {
-  primary 127.0.0.1;
-  key dhcpupdate;
-} zone internal.simplesimple.ca. {
-  primary 127.0.0.1;
-  key dhcpupdate;
-}
-
-zone 0.0.10.in-addr.arpa. {
-  primary 127.0.0.1;
-  key dhcpupdate;
-}
-
-{% for dev in item.developers %}
-zone {{ dev.name }}.dev. {
-  primary 127.0.0.1;
-  key dhcpupdate;
-}
-
-{% endfor %}
-# Network Servers - .0-.15
-# Printers - .16-.24
-# Dev Boxes - .25-.49
-# Desktops - .200-.254
-
-subnet 10.0.0.0 netmask 255.255.255.0 {
-  range 10.0.0.100 10.0.0.150;
+{% for domain, subnet in subnets.iteritems() %}
+subnet {{ subnet.subnet }}.0 netmask 255.255.255.0 {
+  range {{ subnet.subnet }}.{{ subnet.start }} {{ subnet.subnet }}.{{ subnet.end }};
   authoritative;
-} 
 
-#
-# Network Servers
-#
-
-host nas-dlink {
-  hardware ethernet cc:b2:55:8a:f0:2f;
-  fixed-address 10.0.0.68;
+  option domain-name-servers {{ ansible_default_ipv4.address }}, 8.8.8.8, 8.8.4.4;
+  option domain-name "{{ domain }}";
+  option routers {{ subnet.subnet }}.1;
+  option broadcast-address 192.168.0.255;
 }
 
-host vhost1 {
-  hardware ethernet 00:25:90:ea:7c:34;
-  fixed-address 10.0.0.6;
+zone {{ domain }}. {
+  primary 127.0.0.1;
+  key dhcpupdate;
 }
 
-
-
-#
-# Desktops
-#
-
-host pc-jeff {
-  hardware ethernet 94:de:80:69:d0:ff;
-  fixed-address 10.0.0.50;
+zone {{ subnet.reverse }}.in-addr.arpa. {
+  primary 127.0.0.1;
+  key dhcpupdate;
 }
 
-host pc-johan {
-  hardware ethernet 84:2b:2b:9d:bd:c1;
-  fixed-address 10.0.0.52;
-}
-
-host pc-spenser {
-  hardware ethernet ac:22:0b:75:e3:ba;
-  fixed-address 10.0.0.69;
-}
-
-#
-# Network Servers
-#
-host nagios {
-  hardware ethernet 52:54:00:3b:d6:4a;
-  fixed-address 10.0.0.11;
-}
-
-host phabricator.dev {
-  hardware ethernet 52:54:00:f6:f4:ca;
-  fixed-address 10.0.0.12;
-}
-
-
-
-#
-# Printers
-#
-
-host print-hl5370dw {
-  hardware ethernet 00:1b:a9:86:27:21;
-  fixed-address 10.0.0.16;
-}
-
-host print-quartzenergy {
-  hardware ethernet 00:22:58:93:e6:65;
-  fixed-address 10.0.0.17;
-}
-
-
-
-#
-# Dev Boxes
-#
-
-host staging.simplesimple.ca {
-  option domain-name "";
-  hardware ethernet 52:54:00:57:02:0d;
-  fixed-address 10.0.0.25;
-}
-{% for dev in item.developers %}
-
-host {{ dev.name }}.dev {
-  option domain-name "";
-  hardware ethernet {{ dev.mac }};
-  fixed-address {{ dev.ip }};
-}
 {% endfor %}
+{% include 'hosts.conf.j2' %}

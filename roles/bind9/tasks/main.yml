@@ -6,24 +6,14 @@
   notify: Restart Bind
 - name: Configure Bind Local
   template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
-  with_items: developers
   notify: Restart Bind
-- name: Configure staging.simplesimple.ca
-  template: src=staging.simplesimple.ca.hosts.j2 dest=/var/lib/bind/staging.simplesimple.ca.hosts group=bind mode=660
+- name: Configure subnets
+  template: src=subnet.hosts.j2 dest=/var/lib/bind/{{ item.key }}.hosts group=bind mode=6600
+  with_dict: subnets
   notify: Restart Bind
-- name: Configure internal.simplesimple.ca
-  template: src=internal.simplesimple.ca.hosts.j2 dest=/var/lib/bind/internal.simplesimple.ca.hosts group=bind mode=660
+- name: Configure RDNS for subnets
+  template: src=rdns.rev.j2 dest=/var/lib/bind/{{ item.value.reverse }}.rev group=bind mode=660
+  with_dict: subnets
   notify: Restart Bind
-- name: Configure RDNS for 10.0.0.x
-  template: src=0.0.10.rev.j2 dest=/var/lib/bind/0.0.10.rev group=bind mode=660
-  notify: Restart Bind
-
-- name: Configure dev.tld
-  template: src=dev.tld.zone.j2 dest=/var/lib/bind/dev.tld.zone group=bind mode=660
-  notify: Restart Bind
-- name: Configure Devbox Zones
-  template: src=devzone.hosts.j2 dest=/var/lib/bind/{{ item.1.name }}.dev.hosts group=bind mode=660
-  with_subelements:
-  - developers
-  - developers
-  notify: Restart Bind
+- name: Ensure /var/lib/bind is owned by Bind
+  file: path=/var/lib/bind owner=bind group=bind recurse=yes state=directory

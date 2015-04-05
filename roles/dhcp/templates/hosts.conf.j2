@@ -1,0 +1,12 @@
+{% for domain, subnet in subnets.iteritems() %}
+{% for hostname, system in subnet.systems.iteritems() %}
+host {{ hostname }} {
+  {% if system.domain is defined %}
+  option domain-name "";
+  {% endif %}
+  hardware ethernet {{ system.mac }};
+  fixed-address {{ subnet.subnet }}.{{ system.ip_octet }};
+}
+
+{% endfor %}
+{% endfor %}

@@ -3,5 +3,4 @@
   apt: pkg=isc-dhcp-server
 - name: Configure DHCP
   template: src=dhcpd.conf.j2 dest=/etc/dhcp/dhcpd.conf
-  with_items: developers
   notify: Restart DHCP

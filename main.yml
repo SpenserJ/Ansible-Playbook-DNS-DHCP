@@ -3,6 +3,9 @@
   sudo: True
   vars_files:
   - vars/main.yml
+  tasks:
+  - name: Install DNSUtils
+    apt: pkg=dnsutils state=present
   roles:
   - dhcp
   - bind9
