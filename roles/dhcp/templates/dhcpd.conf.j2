@@ -10,6 +10,7 @@ update-static-leases  on;
 update-conflict-detection false;
 
 {% for domain, subnet in subnets.iteritems() %}
+{% if subnet.authoritative|default(false) %}
 subnet {{ subnet.subnet }}.0 netmask 255.255.255.0 {
   range {{ subnet.subnet }}.{{ subnet.start }} {{ subnet.subnet }}.{{ subnet.end }};
   authoritative;
@@ -17,18 +18,22 @@ subnet {{ subnet.subnet }}.0 netmask 255.255.255.0 {
   option domain-name-servers {{ ansible_default_ipv4.address }}, 8.8.8.8, 8.8.4.4;
   option domain-name "{{ domain }}";
   option routers {{ subnet.subnet }}.1;
-  option broadcast-address 192.168.0.255;
+  option broadcast-address {{ subnet.subnet }}.255;
 }
+
+{% endif -%}
 
 zone {{ domain }}. {
   primary 127.0.0.1;
   key dhcpupdate;
 }
 
+{% if subnet.reverse|default(false) %}
 zone {{ subnet.reverse }}.in-addr.arpa. {
   primary 127.0.0.1;
   key dhcpupdate;
 }
+{% endif -%}
 
 {% endfor %}
 {% include 'hosts.conf.j2' %}
