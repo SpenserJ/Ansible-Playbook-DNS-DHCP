@@ -8,11 +8,13 @@ zone "{{ domain }}" {
   notify yes;
 };
 
+{% if subnet.reverse|default(false) %}
 zone "{{ subnet.reverse }}.in-addr.arpa" {
   type master;
   file "/var/lib/bind/{{ subnet.reverse }}.rev";
   allow-update { key dhcpupdate; };
 };
+{% endif -%}
 
 {% endfor %}
 
