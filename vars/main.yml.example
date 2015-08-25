@@ -16,3 +16,16 @@ subnets:
         domain: 'staging.example.com'
         ip_octet: 26
         mac: '00:00:00:00:00:00'
+
+  spenser.dev:
+    soa: 'hello@spenserj.com'
+    nameserver: 'dns.internal.example.com'
+    subnet: '192.168.0'
+    dns_host: '192.168.0.2'
+    systems:
+      spenser.dev:
+        ip_octet: 31
+        mac: '00:00:00:00:00:00'
+        domain: ''
+    additional_records:
+      - '*  CNAME spenser.dev.'
