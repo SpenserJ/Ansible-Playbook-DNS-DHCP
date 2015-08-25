@@ -13,6 +13,7 @@
   notify: Restart Bind
 - name: Configure RDNS for subnets
   template: src=rdns.rev.j2 dest=/var/lib/bind/{{ item.value.reverse }}.rev group=bind mode=660
+  when: item.value.reverse|default(false)
   with_dict: subnets
   notify: Restart Bind
 - name: Ensure /var/lib/bind is owned by Bind

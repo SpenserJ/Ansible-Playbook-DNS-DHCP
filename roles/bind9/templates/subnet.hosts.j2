@@ -23,7 +23,7 @@ $TTL 3600; 1 hour - Testing only
 
 ; Next, we define the hosts necessary to make the domain function. First, we add
 ; an "NS Record" to define the domain's name server...
-          NS  {{ item.value.nameserver|default(ansible_hostname + '.' + item.key) }}
+          NS  {{ item.value.nameserver|default(ansible_hostname + '.' + item.key) }}.
 
 ; ...then an "A Record" for the domain server's IP address...
           A   {{ item.value.dns_host|default(ansible_default_ipv4.address) }}
