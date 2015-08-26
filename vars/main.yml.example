@@ -1,31 +1,40 @@
 ---
-domain_name: 'internal.example.com'
 soa: 'admin@example.com'
 subnets:
   internal.example.com:
     subnet: '192.168.0'
     reverse: '0.168.192'
+
+    # Does this subnet have DHCP enabled? (Default: false)
+    authoritative: true
+    # What addresses can DHCP allocate for clients?
     start: 150
     end: 199
+
     # Static IPs
     systems:
       host1:
         ip_octet: 25
         mac: '00:00:00:00:00:00'
       staging:
+        # Override the subnet's domain for this address.
         domain: 'staging.example.com'
         ip_octet: 26
         mac: '00:00:00:00:00:00'
 
   spenser.dev:
-    soa: 'hello@spenserj.com'
-    nameserver: 'dns.internal.example.com'
     subnet: '192.168.0'
+    # Specify an alternate Start of Authority record for this subnet.
+    soa: 'hello@spenserj.com'
+    # Specify an alternate nameserver and DNS host for this subnet.
+    nameserver: 'dns.internal.example.com'
     dns_host: '192.168.0.2'
     systems:
       spenser.dev:
         ip_octet: 31
         mac: '00:00:00:00:00:00'
+        # The name of this system should be used as an FQDN.
         domain: ''
+    # Additional DNS records for this subnet's zonefile
     additional_records:
       - '*  CNAME spenser.dev.'
