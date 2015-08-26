@@ -7,6 +7,9 @@
 - name: Configure Bind Local
   template: src=named.conf.local.j2 dest=/etc/bind/named.conf.local group=bind
   notify: Restart Bind
+- name: Freeze subnets
+  command: rndc freeze {{ item.key }}
+  with_dict: subnets
 - name: Configure subnets
   template: src=subnet.hosts.j2 dest=/var/lib/bind/{{ item.key }}.hosts group=bind mode=6600
   with_dict: subnets
@@ -16,5 +19,11 @@
   when: item.value.reverse|default(false)
   with_dict: subnets
   notify: Restart Bind
+- name: Reload subnets
+  command: rndc reload {{ item.key }}
+  with_dict: subnets
+- name: Unfreeze subnets
+  command: rndc thaw {{ item.key }}
+  with_dict: subnets
 - name: Ensure /var/lib/bind is owned by Bind
   file: path=/var/lib/bind owner=bind group=bind recurse=yes state=directory
